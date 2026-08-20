@@ -1,0 +1,278 @@
+{
+  "entities": {
+    "Salon": {
+      "title": "Salon Tenant",
+      "description": "Multi-tenant salon business profile and configuration",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "slug": { "type": "string", "maxLength": 64 },
+        "ownerId": { "type": "string", "maxLength": 64 },
+        "ownerEmail": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "whatsapp": { "type": "string", "maxLength": 20 },
+        "address": { "type": "string", "maxLength": 200 },
+        "city": { "type": "string", "maxLength": 60 },
+        "logo": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string", "maxLength": 50 },
+        "rating": { "type": "number" },
+        "reviewsCount": { "type": "number" },
+        "subscriptionPlan": { "type": "string", "enum": ["STARTER", "BUSINESS", "PREMIUM"] },
+        "subscriptionStatus": { "type": "string", "enum": ["TRIAL", "ACTIVE", "PAST_DUE", "CANCELLED", "EXPIRED"] },
+        "trialEndsAt": { "type": "string", "maxLength": 40 },
+        "primaryColor": { "type": "string", "maxLength": 20 },
+        "secondaryColor": { "type": "string", "maxLength": 20 },
+        "openingHours": { "type": "string", "maxLength": 200 },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "name", "slug", "ownerId", "subscriptionPlan", "subscriptionStatus"]
+    },
+    "Service": {
+      "title": "Salon Service",
+      "description": "Service catalog item offered by a salon",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 500 },
+        "category": { "type": "string", "maxLength": 50 },
+        "price": { "type": "number" },
+        "duration": { "type": "number" },
+        "image": { "type": "string", "maxLength": 500 },
+        "active": { "type": "boolean" },
+        "recommendedAddOn": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "revisitCycleDays": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 40 },
+        "updatedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "name", "category", "price", "duration"]
+    },
+    "Staff": {
+      "title": "Salon Staff Member",
+      "description": "Stylist, barber, therapist or manager employed by a salon",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "enum": ["MANAGER", "STAFF"] },
+        "specialization": { "type": "string", "maxLength": 100 },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "active": { "type": "boolean" },
+        "workingDays": { "type": "string", "maxLength": 50 },
+        "workingHours": { "type": "string", "maxLength": 50 },
+        "commissionPercentage": { "type": "number" },
+        "rating": { "type": "number" },
+        "completedBookings": { "type": "number" },
+        "revenueGenerated": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "name", "role", "active"]
+    },
+    "Customer": {
+      "title": "Salon Customer Profile",
+      "description": "Tenant-scoped customer profile with stats and preferences",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "phone": { "type": "string", "maxLength": 20 },
+        "email": { "type": "string", "maxLength": 100 },
+        "dob": { "type": "string", "maxLength": 20 },
+        "gender": { "type": "string", "maxLength": 20 },
+        "avatar": { "type": "string", "maxLength": 500 },
+        "referralCode": { "type": "string", "maxLength": 30 },
+        "referredBy": { "type": "string", "maxLength": 30 },
+        "totalVisits": { "type": "number" },
+        "totalSpent": { "type": "number" },
+        "walletBalance": { "type": "number" },
+        "loyaltyPoints": { "type": "number" },
+        "lastVisitDate": { "type": "string", "maxLength": 40 },
+        "nextReminderDate": { "type": "string", "maxLength": 40 },
+        "segment": { "type": "string", "enum": ["NEW", "ACTIVE", "RETURNING", "INACTIVE", "VIP", "HIGH_VALUE", "AT_RISK"] },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "name", "phone", "referralCode"]
+    },
+    "Booking": {
+      "title": "Appointment Booking",
+      "description": "Appointment reservation for services with staff and schedule",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "bookingNumber": { "type": "string", "maxLength": 40 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "staffId": { "type": "string", "maxLength": 64 },
+        "staffName": { "type": "string", "maxLength": 100 },
+        "serviceIds": { "type": "string", "maxLength": 200 },
+        "serviceNames": { "type": "string", "maxLength": 300 },
+        "appointmentDate": { "type": "string", "maxLength": 30 },
+        "appointmentTime": { "type": "string", "maxLength": 20 },
+        "durationMinutes": { "type": "number" },
+        "subtotal": { "type": "number" },
+        "discountAmount": { "type": "number" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["PENDING", "CONFIRMED", "CHECKED_IN", "IN_PROGRESS", "COMPLETED", "CANCELLED", "NO_SHOW"] },
+        "paymentStatus": { "type": "string", "enum": ["PENDING", "PAID", "REFUNDED", "FAILED"] },
+        "paymentMethod": { "type": "string", "enum": ["WALLET", "UPI", "CASH", "CARD", "PAY_AT_SALON"] },
+        "notes": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "bookingNumber", "salonId", "customerId", "appointmentDate", "appointmentTime", "status", "totalAmount"]
+    },
+    "Invoice": {
+      "title": "Service Billing Invoice",
+      "description": "Official billing invoice generated upon appointment completion",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "invoiceNumber": { "type": "string", "maxLength": 40 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "bookingId": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "subtotal": { "type": "number" },
+        "discount": { "type": "number" },
+        "tax": { "type": "number" },
+        "total": { "type": "number" },
+        "paymentMethod": { "type": "string", "enum": ["WALLET", "UPI", "CASH", "CARD"] },
+        "paymentStatus": { "type": "string", "maxLength": 30 },
+        "items": { "type": "string", "maxLength": 1000 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "invoiceNumber", "salonId", "customerId", "total", "paymentMethod"]
+    },
+    "WalletTransaction": {
+      "title": "Wallet Ledger Transaction",
+      "description": "Immutable ledger record for wallet credits and debits",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["CREDIT", "DEBIT", "REFUND", "BONUS", "EXPIRY", "ADJUSTMENT"] },
+        "referenceId": { "type": "string", "maxLength": 64 },
+        "description": { "type": "string", "maxLength": 200 },
+        "balanceAfter": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "customerId", "amount", "type"]
+    },
+    "Offer": {
+      "title": "Salon Promotional Offer",
+      "description": "Promotions, discount coupons, and deals configured by the salon",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "name": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 300 },
+        "code": { "type": "string", "maxLength": 30 },
+        "discountType": { "type": "string", "enum": ["PERCENTAGE", "FIXED_AMOUNT", "FREE_SERVICE"] },
+        "discountValue": { "type": "number" },
+        "minimumAmount": { "type": "number" },
+        "maximumDiscount": { "type": "number" },
+        "validFrom": { "type": "string", "maxLength": 30 },
+        "validUntil": { "type": "string", "maxLength": 30 },
+        "usageLimit": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "name", "code", "discountType", "discountValue", "active"]
+    },
+    "Review": {
+      "title": "Customer Review",
+      "description": "Verified post-service rating and feedback from customer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "bookingId": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "rating": { "type": "number" },
+        "comment": { "type": "string", "maxLength": 500 },
+        "staffName": { "type": "string", "maxLength": 100 },
+        "serviceName": { "type": "string", "maxLength": 100 },
+        "ownerReply": { "type": "string", "maxLength": 300 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "customerId", "rating", "comment"]
+    },
+    "Reminder": {
+      "title": "Smart Revisit Reminder",
+      "description": "Automated reminder schedule calculated from service revisit cycles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64 },
+        "salonId": { "type": "string", "maxLength": 64 },
+        "customerId": { "type": "string", "maxLength": 64 },
+        "customerName": { "type": "string", "maxLength": 100 },
+        "customerPhone": { "type": "string", "maxLength": 20 },
+        "lastServiceName": { "type": "string", "maxLength": 100 },
+        "lastVisitDate": { "type": "string", "maxLength": 40 },
+        "reminderDueDate": { "type": "string", "maxLength": 40 },
+        "status": { "type": "string", "enum": ["SCHEDULED", "SENT", "BOOKED", "DISMISSED"] },
+        "channel": { "type": "string", "enum": ["WHATSAPP", "SMS", "IN_APP", "PUSH"] },
+        "message": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "salonId", "customerId", "reminderDueDate", "status"]
+    }
+  },
+  "firestore": {
+    "/salons/{salonId}": {
+      "schema": "#/entities/Salon",
+      "description": "Salon tenant accounts and configuration"
+    },
+    "/salons/{salonId}/services/{serviceId}": {
+      "schema": "#/entities/Service",
+      "description": "Services offered by the salon tenant"
+    },
+    "/salons/{salonId}/staff/{staffId}": {
+      "schema": "#/entities/Staff",
+      "description": "Staff roster and availability for the salon"
+    },
+    "/salons/{salonId}/customers/{customerId}": {
+      "schema": "#/entities/Customer",
+      "description": "Customers belonging to the salon tenant"
+    },
+    "/salons/{salonId}/bookings/{bookingId}": {
+      "schema": "#/entities/Booking",
+      "description": "Bookings for the salon tenant"
+    },
+    "/salons/{salonId}/invoices/{invoiceId}": {
+      "schema": "#/entities/Invoice",
+      "description": "Billing invoices for completed appointments"
+    },
+    "/salons/{salonId}/walletTransactions/{transactionId}": {
+      "schema": "#/entities/WalletTransaction",
+      "description": "Immutable ledger of wallet credits/debits"
+    },
+    "/salons/{salonId}/offers/{offerId}": {
+      "schema": "#/entities/Offer",
+      "description": "Promotional offers and coupons"
+    },
+    "/salons/{salonId}/reviews/{reviewId}": {
+      "schema": "#/entities/Review",
+      "description": "Customer reviews and feedback"
+    },
+    "/salons/{salonId}/reminders/{reminderId}": {
+      "schema": "#/entities/Reminder",
+      "description": "Automated customer retention revisit reminders"
+    }
+  }
+}

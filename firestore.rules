@@ -1,0 +1,132 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSuperAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'shubhampatil282487@gmail.com' ||
+        exists(/databases/$(database)/documents/superadmins/$(request.auth.uid))
+      );
+    }
+
+    function isSalonOwner(salonId) {
+      return isSignedIn() && (
+        isSuperAdmin() ||
+        (exists(/databases/$(database)/documents/salons/$(salonId)) &&
+         get(/databases/$(database)/documents/salons/$(salonId)).data.ownerId == request.auth.uid)
+      );
+    }
+
+    function isSalonStaff(salonId) {
+      return isSignedIn() && (
+        isSalonOwner(salonId) ||
+        exists(/databases/$(database)/documents/salons/$(salonId)/staff/$(request.auth.uid))
+      );
+    }
+
+    // Salon Tenant collection
+    match /salons/{salonId} {
+      allow get, list: if true; // Public can view salon profiles for booking website and directory
+      allow create: if isSignedIn() && isValidId(salonId) && incoming().ownerId == request.auth.uid;
+      allow update: if isSalonOwner(salonId);
+      allow delete: if isSuperAdmin();
+
+      // Services Subcollection
+      match /services/{serviceId} {
+        allow get, list: if true; // Public catalog
+        allow create, update, delete: if isSalonOwner(salonId) && isValidId(serviceId);
+      }
+
+      // Staff Subcollection
+      match /staff/{staffId} {
+        allow get, list: if true; // Public staff view for booking selector
+        allow create, update, delete: if isSalonOwner(salonId) && isValidId(staffId);
+      }
+
+      // Customers Subcollection (PII Protected)
+      match /customers/{customerId} {
+        allow get: if isSalonStaff(salonId) || (isSignedIn() && (request.auth.uid == customerId || request.auth.uid == resource.data.authUid));
+        allow list: if isSalonStaff(salonId);
+        allow create: if isSignedIn() && isValidId(customerId);
+        allow update: if isSalonStaff(salonId) || (isSignedIn() && (request.auth.uid == customerId || request.auth.uid == resource.data.authUid));
+        allow delete: if isSalonOwner(salonId);
+      }
+
+      // Bookings Subcollection
+      match /bookings/{bookingId} {
+        allow get: if isSalonStaff(salonId) || (isSignedIn() && (existing().customerId == request.auth.uid || existing().customerPhone == request.auth.token.phone_number));
+        allow list: if isSalonStaff(salonId) || isSignedIn();
+        allow create: if isSignedIn() && isValidId(bookingId);
+        allow update: if isSalonStaff(salonId) || (isSignedIn() && (existing().customerId == request.auth.uid || existing().customerPhone == request.auth.token.phone_number));
+        allow delete: if isSalonOwner(salonId);
+      }
+
+      // Invoices Subcollection
+      match /invoices/{invoiceId} {
+        allow get: if isSalonStaff(salonId) || (isSignedIn() && (existing().customerId == request.auth.uid || existing().customerPhone == request.auth.token.phone_number));
+        allow list: if isSalonStaff(salonId);
+        allow create, update: if isSalonStaff(salonId) && isValidId(invoiceId);
+        allow delete: if isSalonOwner(salonId);
+      }
+
+      // Wallet Transactions Ledger (Immutable)
+      match /walletTransactions/{transactionId} {
+        allow get: if isSalonStaff(salonId) || (isSignedIn() && existing().customerId == request.auth.uid);
+        allow list: if isSalonStaff(salonId) || isSignedIn();
+        allow create: if isSalonStaff(salonId) && isValidId(transactionId);
+        allow update, delete: if false; // Immutable ledger
+      }
+
+      // Loyalty Rewards Subcollection
+      match /loyaltyRewards/{rewardId} {
+        allow get, list: if true; // Public rewards catalog
+        allow create, update, delete: if isSalonOwner(salonId) && isValidId(rewardId);
+      }
+
+      // Offers & Coupons
+      match /offers/{offerId} {
+        allow get, list: if true; // Public offers
+        allow create, update, delete: if isSalonOwner(salonId) && isValidId(offerId);
+      }
+
+      // Reviews
+      match /reviews/{reviewId} {
+        allow get, list: if true; // Public reviews
+        allow create: if isSignedIn() && isValidId(reviewId);
+        allow update: if isSalonStaff(salonId) || (isSignedIn() && existing().customerId == request.auth.uid);
+        allow delete: if isSalonOwner(salonId);
+      }
+
+      // Reminders (System / Staff managed)
+      match /reminders/{reminderId} {
+        allow get, list: if isSalonStaff(salonId) || (isSignedIn() && (existing().customerId == request.auth.uid || existing().customerPhone == request.auth.token.phone_number));
+        allow create, update, delete: if isSalonStaff(salonId) && isValidId(reminderId);
+      }
+    }
+
+    // User profiles (Owners, Staff, Customers global index for lookup)
+    match /users/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isSuperAdmin();
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if isSuperAdmin();
+    }
+  }
+}

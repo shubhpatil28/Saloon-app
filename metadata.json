@@ -1,0 +1,6 @@
+{
+  "name": "SalonOS - Multi-Tenant Salon SaaS",
+  "description": "Enterprise-grade multi-tenant Salon Management SaaS platform with customer booking, wallet, loyalty, staff scheduling, billing, and super admin.",
+  "requestFramePermissions": ["camera", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

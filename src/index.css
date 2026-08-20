@@ -1,0 +1,95 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-canvas: #F9F8F4;
+    --bg-surface: #FFFFFF;
+    --bg-muted: #F1F0E8;
+    --bg-subtle: #EDEDE9;
+    --bg-accent: #E4E4D9;
+    --primary-olive: #5A5A40;
+    --primary-olive-dark: #474732;
+    --primary-olive-light: #6E6E50;
+    --text-main: #4A4A40;
+    --text-heading: #38382C;
+    --text-muted: #8C8C70;
+    --accent-terracotta: #D4A373;
+    --accent-sand: #D6CCC2;
+    --border-subtle: #E2E1D8;
+    --border-light: #EDECE4;
+  }
+
+  body {
+    background-color: #F9F8F4;
+    color: #4A4A40;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F0E8;
+}
+::-webkit-scrollbar-thumb {
+  background: #D6CCC2;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8C8C70;
+}
+
+
+@layer base {
+  :root {
+    --bg-canvas: #F9F8F4;
+    --bg-surface: #FFFFFF;
+    --bg-muted: #F1F0E8;
+    --bg-subtle: #EDEDE9;
+    --bg-accent: #E4E4D9;
+    --primary-olive: #5A5A40;
+    --primary-olive-dark: #474732;
+    --primary-olive-light: #6E6E50;
+    --text-main: #4A4A40;
+    --text-heading: #38382C;
+    --text-muted: #8C8C70;
+    --accent-terracotta: #D4A373;
+    --accent-sand: #D6CCC2;
+    --border-subtle: #E2E1D8;
+    --border-light: #EDECE4;
+  }
+
+  body {
+    background-color: #F9F8F4;
+    color: #4A4A40;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F0E8;
+}
+::-webkit-scrollbar-thumb {
+  background: #D6CCC2;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8C8C70;
+}
+
